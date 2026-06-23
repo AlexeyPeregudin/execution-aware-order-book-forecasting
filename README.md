@@ -6,7 +6,7 @@ The reported real-data experiments use Binance USDT-margined futures snapshots f
 
 The repository treats forecasting and execution as separate evaluations. A model can improve direction accuracy and still fail once fees, spread, fill uncertainty, and adverse selection are included. That is what happens in the reported BTCUSDT experiments.
 
-The accompanying [Technical Report](Technical%20Report.pdf) (37 pages) gives the full formulation, derivations, and results. This README explains how the repository is organised and how to reproduce the runs.
+The accompanying [Technical Report](TechnicalReport.pdf) (37 pages) gives the full formulation, derivations, and results. This README explains how the repository is organised and how to reproduce the runs.
 
 ---
 
@@ -104,7 +104,7 @@ configs/
 scripts/          one CLI per pipeline stage + run_monthly_robustness.py (the full driver)
 tests/            32 files, one per stage (260+ tests)
 data_manifest/    storage schema, source manifests, SHA-256 checksums
-Technical Report.pdf
+TechnicalReport.pdf
 ```
 
 ---
@@ -192,7 +192,7 @@ The measured signal is small, so the evaluation uses explicit leakage checks, an
 
 **Execution.** The ridge return model — the only model with usable point-return skill — has positive gross PnL, but net PnL is negative after a 5 bps taker fee (−26,740). The multi-task return head produces too many trades and nets −642,809, which is why the return head was removed in later variants. In the passive market-making simulator, every quoting policy posts a negative total reward, and the ranking is governed almost entirely by adverse-selection cost. A forecast-driven control optimiser, using markout, adverse-selection, fill-probability, and uncertainty estimates, beats the naive maker in 3 of 3 months but beats `no_quote` in 0 of 3. In these runs, the forecast mainly reduces quote frequency rather than improving realised reward.
 
-The full tables, figures, regime breakdowns, and the development campaign are in the [Technical Report](Technical%20Report.pdf), and every run regenerates them into `reports/`.
+The full tables, figures, regime breakdowns, and the development campaign are in the [Technical Report](TechnicalReport.pdf), and every run regenerates them into `reports/`.
 
 ---
 
