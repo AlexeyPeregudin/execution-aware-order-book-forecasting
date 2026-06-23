@@ -1,0 +1,88 @@
+_meta:
+  generated_at_utc: '2026-06-17T21:41:57.108178+00:00'
+  entry_count: 6
+entries:
+- source_id: binance_BTCUSDT_20260101
+  venue: binance
+  symbol: BTCUSDT
+  date: '2026-01-01'
+  source_url_or_path: data\raw\binance-futures\book_snapshot_5\2026\01\01\BTCUSDT.csv.gz
+  file_path: data/raw/binance/BTCUSDT/2026-01-01.csv.gz
+  file_format: csv.gz
+  schema_version: '1'
+  created_at_utc: '2026-06-16T20:58:48.767551+00:00'
+  checksum_sha256: 2e1a7aa316a522be6cf785f719d982607b8d8f07da8343af27ce66cdfaf7a253
+  row_count_or_null: null
+  notes: tardis_archive copy
+  collection_start_utc: null
+  collection_end_utc: null
+- source_id: binance_BTCUSDT_20260201
+  venue: binance
+  symbol: BTCUSDT
+  date: '2026-02-01'
+  source_url_or_path: data\raw\binance-futures\book_snapshot_5\2026\02\01\BTCUSDT.csv.gz
+  file_path: data/raw/binance/BTCUSDT/2026-02-01.csv.gz
+  file_format: csv.gz
+  schema_version: '1'
+  created_at_utc: '2026-06-16T20:58:48.869530+00:00'
+  checksum_sha256: 3407b454f3eda32fbc27a2c700d8d1f3b9bd19965c94d66dd8a8539d835286a9
+  row_count_or_null: null
+  notes: tardis_archive copy
+  collection_start_utc: null
+  collection_end_utc: null
+- source_id: binance_BTCUSDT_20260301
+  venue: binance
+  symbol: BTCUSDT
+  date: '2026-03-01'
+  source_url_or_path: data\raw\binance-futures\book_snapshot_5\2026\03\01\BTCUSDT.csv.gz
+  file_path: data/raw/binance/BTCUSDT/2026-03-01.csv.gz
+  file_format: csv.gz
+  schema_version: '1'
+  created_at_utc: '2026-06-16T20:58:48.965002+00:00'
+  checksum_sha256: 89240d1a6345372c20cb47eb27fb69b8e890649072cafd0f4b57e22b3ca45681
+  row_count_or_null: null
+  notes: tardis_archive copy
+  collection_start_utc: null
+  collection_end_utc: null
+- source_id: binance_BTCUSDT_20260401
+  venue: binance
+  symbol: BTCUSDT
+  date: '2026-04-01'
+  source_url_or_path: data\raw\binance-futures\book_snapshot_5\2026\04\01\BTCUSDT.csv.gz
+  file_path: data/raw/binance/BTCUSDT/2026-04-01.csv.gz
+  file_format: csv.gz
+  schema_version: '1'
+  created_at_utc: '2026-06-16T20:58:49.059301+00:00'
+  checksum_sha256: c2d9e07707419b29d3143190aec26e73226958c29fa1b77f826e383425bc09cd
+  row_count_or_null: null
+  notes: tardis_archive copy
+  collection_start_utc: null
+  collection_end_utc: null
+- source_id: binance_BTCUSDT_20260501
+  venue: binance
+  symbol: BTCUSDT
+  date: '2026-05-01'
+  source_url_or_path: data\raw\binance-futures\book_snapshot_5\2026\05\01\BTCUSDT.csv.gz
+  file_path: data/raw/binance/BTCUSDT/2026-05-01.csv.gz
+  file_format: csv.gz
+  schema_version: '1'
+  created_at_utc: '2026-06-16T20:58:49.146916+00:00'
+  checksum_sha256: 736b9b275ff2e2c6f3aa3083aeae238307606802593c0404f3f24c8c924260c8
+  row_count_or_null: null
+  notes: tardis_archive copy
+  collection_start_utc: null
+  collection_end_utc: null
+- source_id: binance_BTCUSDT_20260601
+  venue: binance
+  symbol: BTCUSDT
+  date: '2026-06-01'
+  source_url_or_path: data\raw\binance-futures\book_snapshot_5\2026\06\01\BTCUSDT.csv.gz
+  file_path: data/raw/binance/BTCUSDT/2026-06-01.csv.gz
+  file_format: csv.gz
+  schema_version: '1'
+  created_at_utc: '2026-06-16T20:58:49.285446+00:00'
+  checksum_sha256: 17ec42ff800d0478d06765a88570a84418e3c948acf32e9a71f79e982497ffea
+  row_count_or_null: null
+  notes: tardis_archive copy
+  collection_start_utc: null
+  collection_end_utc: null

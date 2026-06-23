@@ -1,0 +1,115 @@
+# Fast synthetic smoke config exercising every Improvements-spec component:
+# expanding walk-forward, queue-aware partial fills, latent SSM context, the
+# control optimiser + no_quote baseline, and the execution-aware variants.
+# Runs end-to-end on synthetic data in well under a minute with --quick.
+
+data:
+  venue: binance
+  symbols: ["BTCUSDT"]
+  top_k: 5
+  # isolated dirs so a smoke run never clobbers the real BTCUSDT data/features
+  raw_dir: data/_smoke/raw
+  processed_dir: data/_smoke/processed
+  artefact_dir: artefacts
+  monthly_snapshot:
+    enabled: true
+    day_of_month: 1
+    dates: ["2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01", "2024-05-01", "2024-06-01"]
+
+sampling:
+  mode: event_time
+  horizons_events: [10, 50]
+  feature_lookbacks_events: [10, 50]
+
+ingestion:
+  mode: synthetic
+  file_format: csv
+  schema_version: "1"
+  manifest_path: data_manifest/sources_smoke.yml
+  checksums_path: data_manifest/checksums_smoke.yml
+  synthetic:
+    num_days: 6
+    rows_per_day: 1200
+    seed: 11
+
+normalisation:
+  unknown_event_type_policy: flag
+  venue_adapter: null
+
+orderbook:
+  mode: auto
+
+features:
+  include_raw_levels: true
+  include_regime_features: true
+  realised_vol_lookbacks_events: [10, 50]
+  regime_windows_events: {volatility: 50, spread: 50, liquidity: 50}
+  regime_quantiles: {low: 0.33, high: 0.67}
+
+labels:
+  direction_threshold_mode: train_median_relative_spread
+  direction_threshold_alpha: 0.5
+  quantiles: [0.05, 0.50, 0.95]
+  include_markout_targets: true
+  include_adverse_selection_targets: true
+
+splits:
+  mode: expanding_monthly_snapshot
+  min_train_months: 3
+  validation_months: 1
+  test_months: 1
+  step_months: 1
+  embargo_events: 50
+
+datasets:
+  sequence_length: 30
+  exclude_crossed: true
+
+models:
+  run: [no_change, imbalance_rule, logistic_regression, ridge_regression, tcn_small, tcn_exec_multitask]
+
+latent_state:
+  enabled: true
+  state_dim: 3
+  observation_columns: [imbalance_l1, imbalance_lK, ofi_10, return_lag_10, realised_vol_10, relative_spread, regime_depth]
+  reset_each_monthly_day: true
+  append_to_model_context: true
+  append_to_policy_state: true
+
+backtest:
+  run_taker_sanity: true
+  run_market_making: true
+  horizon: 50
+  threshold_grid: [0.0, 0.0001]
+  fee_bps_taker: 5.0
+  fee_bps_maker: 0.0
+  latency_events: 1
+  max_inventory: 1.0
+  trade_size: 1.0
+
+market_making:
+  enabled: true
+  quote_size: 1.0
+  fill_model: queue_aware_partial
+  decision_interval: 100
+  policies: [no_quote, naive_symmetric_mm, inventory_skewed_mm, forecast_aware_mm, uncertainty_aware_mm, control_quote_optimizer]
+  queue_fill:
+    quote_levels: [1, 2]
+    queue_position: back
+    depletion_fill_fraction_grid: [0.5]
+    select_depletion_fraction_on_validation: true
+  control:
+    enabled: true
+    action_levels: [1, 2]
+    lambda_inv_grid: [0.01]
+    lambda_turn_grid: [0.001]
+    lambda_adv_grid: [0.25]
+    lambda_unc_grid: [0.0]
+    lambda_act_grid: [0.0]
+    min_fills_per_test_month: 5
+    fill_probability_model: logistic_regression
+
+robustness:
+  block_bootstrap: {enabled: true, n_bootstrap: 50, block_size_events: 100}
+
+random_seed: 42

@@ -1,0 +1,131 @@
+# Single-symbol monthly execution-aware LOB forecasting (Next Steps extension).
+#
+# BTCUSDT only, top-5 only, first-day-of-month snapshots only. Expanding monthly
+# evaluation, regime-stratified metrics, execution-aware multi-task TCN, and a
+# passive market-making simulator. A fresh checkout runs end-to-end on synthetic
+# monthly data; point ingestion at a Binance-compatible archive to use real data.
+
+data:
+  venue: binance
+  symbols: ["BTCUSDT"]
+  top_k: 5
+  raw_dir: data/raw
+  processed_dir: data/processed
+  artefact_dir: artefacts
+  monthly_snapshot:
+    enabled: true
+    day_of_month: 1
+    dates:
+      - "2024-01-01"
+      - "2024-02-01"
+      - "2024-03-01"
+      - "2024-04-01"
+      - "2024-05-01"
+      - "2024-06-01"
+
+sampling:
+  mode: event_time
+  horizons_events: [10, 50, 200]
+  feature_lookbacks_events: [10, 50, 200]
+
+ingestion:
+  mode: synthetic
+  file_format: csv
+  schema_version: "1"
+  overwrite: false
+  manifest_path: data_manifest/sources.yml
+  checksums_path: data_manifest/checksums.yml
+  synthetic:
+    num_days: 6
+    rows_per_day: 2500
+    seed: 7
+
+normalisation:
+  unknown_event_type_policy: flag
+  venue_adapter: null
+
+orderbook:
+  mode: auto
+  align_trades: false
+
+features:
+  include_basic_microstructure: true
+  include_best_level_ofi: true
+  include_multilevel_imbalance: true
+  include_raw_levels: true
+  include_regime_features: true
+  realised_vol_lookbacks_events: [50, 200, 1000]
+  regime_windows_events:
+    volatility: 1000
+    spread: 1000
+    liquidity: 1000
+  regime_quantiles:
+    low: 0.33
+    high: 0.67
+
+labels:
+  direction_threshold_mode: train_median_relative_spread
+  direction_threshold_alpha: 0.5
+  quantiles: [0.05, 0.50, 0.95]
+  include_markout_targets: true
+  include_adverse_selection_targets: true
+
+splits:
+  mode: expanding_monthly_snapshot
+  min_train_months: 3
+  validation_months: 1
+  test_months: 1
+  embargo_events: 200
+  aggregate_fold_metrics: true
+
+datasets:
+  sequence_length: 100
+  exclude_crossed: true
+  drop_incomplete_feature_rows: true
+
+models:
+  run:
+    - no_change
+    - imbalance_rule
+    - logistic_regression
+    - ridge_regression
+    - lightgbm
+    - tcn_small
+    - tcn_exec_multitask
+
+backtest:
+  run_taker_sanity: true
+  run_market_making: true
+  horizon: 50
+  threshold_grid: [0.0, 0.00001, 0.00002, 0.00005, 0.0001]
+  fee_bps: 5.0
+  fee_bps_taker: 5.0
+  fee_bps_maker: 0.0
+  latency_events: 1
+  max_position: 1.0
+  max_inventory: 1.0
+  trade_size: 1.0
+
+market_making:
+  enabled: true
+  action_space: quote_sides_only
+  quote_distance_ticks: [0, 1]
+  quote_size: 1.0
+  fill_model: conservative_touch_or_mid_cross
+  inventory_penalties: [0.0, 0.001, 0.01, 0.05]
+  uncertainty_threshold_grid: [0.0, 0.5, 1.0, 1.5, 2.0]
+  policies:
+    - naive_symmetric_mm
+    - inventory_skewed_mm
+    - forecast_aware_mm
+    - uncertainty_aware_mm
+    - contextual_bandit_mm
+
+robustness:
+  block_bootstrap:
+    enabled: true
+    n_bootstrap: 300
+    block_size_events: 1000
+    confidence_level: 0.95
+
+random_seed: 42

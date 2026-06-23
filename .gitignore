@@ -1,0 +1,60 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+.Python
+
+# ── Build / packaging ─────────────────────────────────────────────────────────
+build/
+dist/
+*.egg-info/
+*.egg
+MANIFEST
+pip-wheel-metadata/
+.eggs/
+
+# ── Virtual environments ──────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+ENV/
+.env
+.env.local
+.env.*.local
+
+# ── Generated pipeline outputs ────────────────────────────────────────────────
+# Raw / processed data: reproduce with `make download-sample-data` or by
+# dropping real archives under data/raw/ and running the pipeline.
+data/
+# Models, predictions, metrics, reports (reproduced with `make mvp` or `make monthly`).
+artefacts/
+reports/figures/
+reports/tables/
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+*.cover
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── IDEs ──────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.iml
+*.sublime-project
+*.sublime-workspace
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# ── Claude Code ───────────────────────────────────────────────────────────────
+.claude/

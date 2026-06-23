@@ -1,0 +1,13 @@
+channels: 16
+kernel_size: 5
+num_layers: 4
+sequence_length: 100
+epochs: 8
+batch_size: 64
+learning_rate: 0.0005
+dropout: 0.10
+weight_decay: 0.0005
+early_stopping: true
+patience: 2
+restore_best_validation: true
+selection_metric: mean_validation_direction_accuracy

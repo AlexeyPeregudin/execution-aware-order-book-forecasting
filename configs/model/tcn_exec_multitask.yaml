@@ -1,0 +1,24 @@
+# Compact execution-aware multi-task TCN.
+# Small enough to train on a home PC (CPU or one consumer GPU).
+channels: 32
+kernel_size: 5
+num_layers: 5
+sequence_length: 100
+epochs: 20
+batch_size: 64
+learning_rate: 0.0005
+dropout: 0.10
+weight_decay: 0.0005
+pooling: gated            # gated | last_step | attention
+context_hidden: 32
+fusion_hidden: 64
+early_stopping: true
+patience: 7
+min_epochs: 10
+restore_best_validation: true
+objective_weights:
+  return: 0.10
+  direction: 1.0
+  quantile: 1.0
+  markout: 0.5
+  adverse: 0.25

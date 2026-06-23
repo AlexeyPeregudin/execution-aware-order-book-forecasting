@@ -1,0 +1,77 @@
+# Real Tardis data: binance-futures BTCUSDT book_snapshot_25, 2025-08-01
+# Staged file: data/raw/staged/binance/BTCUSDT/2025-08-01.gz
+# Converted from Tardis format (timestamp µs, asks[i]/bids[i] columns)
+# to project snapshot-CSV format (timestamp_ms, bid_px_k/ask_px_k columns).
+
+data:
+  venue: binance
+  symbols: ["BTCUSDT"]
+  start_date: "2025-08-01"
+  end_date: "2025-08-01"
+  top_k: 10
+  raw_dir: data/raw
+  processed_dir: data/processed
+  artefact_dir: artefacts
+
+sampling:
+  mode: event_time
+  horizons_events: [10, 50, 200]
+  feature_lookbacks_events: [10, 50, 200]
+
+ingestion:
+  mode: local_archive
+  source_root: data/raw/staged
+  file_format: gz
+  schema_version: "1"
+  overwrite: false
+  manifest_path: data_manifest/sources.yml
+  checksums_path: data_manifest/checksums.yml
+
+normalisation:
+  unknown_event_type_policy: flag
+  venue_adapter: null  # 'binance' resolves to SnapshotCsvAdapter
+
+orderbook:
+  mode: auto
+  align_trades: false
+
+labels:
+  direction_threshold_mode: train_median_relative_spread
+  direction_threshold_alpha: 0.5
+
+splits:
+  train_fraction: 0.6
+  validation_fraction: 0.2
+  test_fraction: 0.2
+  embargo_events: 200
+
+datasets:
+  sequence_length: 100
+  exclude_crossed: true
+  drop_incomplete_feature_rows: true
+
+features:
+  include_basic_microstructure: true
+  include_best_level_ofi: true
+  include_multilevel_imbalance: true
+  realised_vol_lookbacks_events: [50, 200]
+  include_raw_levels: false
+
+models:
+  run:
+    - no_change
+    - imbalance_rule
+    - logistic_regression
+    - ridge_regression
+    - lightgbm
+    - tcn_small
+
+backtest:
+  horizon: 50
+  threshold_grid: [0.0, 0.00001, 0.00002, 0.00005, 0.0001]
+  fee_bps: 5.0
+  latency_events: 1
+  max_position: 1.0
+  trade_size: 1.0
+
+random_seed: 42
